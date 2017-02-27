@@ -19,7 +19,6 @@ RxNetWork依赖以下类库：
 
 如果不想使用RxNetWork依赖的类库，请用`exclude`排除掉
 
-
 > 项目试用：
 
 [https://github.com/7449/ZLSimple](https://github.com/7449/ZLSimple)
@@ -92,7 +91,7 @@ CallAdapter.Factory
 
 > 缓存：
 
-如果想使用默认的`okhttp`,缓存需要如下配置
+如果使用默认的`okhttp`,缓存需要如下配置
 
         RxNetWork
                 .getInstance()
@@ -104,11 +103,22 @@ CallAdapter.Factory
 
 > 配置Header:
 
-如果想使用默认的`okhttp`,配置Header需要如下操作：
+如果使用默认的`okhttp`,配置Header需要如下操作：
 
         RxNetWork
                 .getInstance()
                 .setHeaderInterceptor();
+		
+
+> 配置Log
+
+如果使用默认的`okhttp`,配置Header需要如下操作：
+
+        RxNetWork
+                .getInstance()
+                .setLogInterceptor();
+
+
 
 > RxBus使用：
 
