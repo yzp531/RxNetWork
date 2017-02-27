@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+    }
+    lintOptions {
+        abortOnError false
+    }
+    allprojects {
+        tasks.withType(Javadoc) {
+            options {
+                encoding "UTF-8"
+                charSet 'UTF-8'
+                links "http://docs.oracle.com/javase/7/docs/api"
+            }
+        }
+    }
+}
+
+publish {
+    userOrg = 'ydevelop'
+    groupId = 'com.ydevelop'
+    artifactId = 'rxNetWork'
+    publishVersion = '0.0.1'
+    desc = 'this is rxNetWork'
+    website = 'https://github.com/7449/RxNetWork'
+}
+dependencies {
+    compile 'io.reactivex:rxjava:1.2.6'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.android.support:support-annotations:25.0.0'
+}
