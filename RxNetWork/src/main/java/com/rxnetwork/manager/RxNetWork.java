@@ -39,7 +39,6 @@ public class RxNetWork {
     private Interceptor mHeaderInterceptor = null;
     private Interceptor mCacheInterceptor = null;
     private Cache mCache = null;
-
     private CompositeSubscription compositeSubscription = null;
 
     private RxNetWork() {
@@ -110,17 +109,9 @@ public class RxNetWork {
         return this;
     }
 
-    private void unSubscribe() {
-        if (!RxUtils.isEmpty(compositeSubscription) && !compositeSubscription.isUnsubscribed()) {
-            compositeSubscription.unsubscribe();
-            compositeSubscription = null;
-        }
-    }
-
     public void clearSubscription() {
         if (!RxUtils.isEmpty(compositeSubscription) && !compositeSubscription.isUnsubscribed()) {
             compositeSubscription.clear();
-            compositeSubscription = null;
         }
     }
 
@@ -138,13 +129,11 @@ public class RxNetWork {
                     @Override
                     public void onCompleted() {
                         listener.onNetWorkCompleted();
-                        unSubscribe();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         listener.onNetWorkError(e);
-                        unSubscribe();
                     }
 
                     @Override

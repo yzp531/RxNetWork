@@ -5,7 +5,7 @@ this is android network ,and RxBus
 
 > gradle:
 
-	compile 'com.ydevelop:rxNetWork:0.0.1'
+	compile 'com.ydevelop:rxNetWork:0.0.2'
 
 
 RxNetWork依赖以下类库：
@@ -109,6 +109,10 @@ CallAdapter.Factory
         RxNetWork
                 .getInstance()
                 .setHeaderInterceptor();
+
+> 取消订阅
+
+	RxNetWork.getInstance().clearSubscription();
 
 > RxBus使用：
 

@@ -35,34 +35,6 @@ public class MainActivity extends AppCompatActivity
                 onRefresh();
             }
         });
-
-        RxNetWork.getInstance().getApi(
-
-                RxNetWork.observable(Api.ZLService.class).getList("", 20, 0),
-
-                new RxNetWorkListener<List<ListModel>>() {
-                    @Override
-                    public void onNetWorkStart() {
-
-                    }
-
-                    @Override
-                    public void onNetWorkError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNetWorkCompleted() {
-
-                    }
-
-                    @Override
-                    public void onNetWorkSuccess(List<ListModel> data) {
-
-                    }
-                }
-
-        );
     }
 
     @Override
@@ -76,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNetWorkStart() {
+        RxNetWork.getInstance().clearSubscription();
         swipeRefreshLayout.setRefreshing(true);
     }
 
