@@ -5,7 +5,7 @@ this is android network ,and RxBus
 
 > gradle:
 
-	compile 'com.ydevelop:rxNetWork:0.0.2'
+	compile 'com.ydevelop:rxNetWork:0.0.3'
 
 
 RxNetWork依赖以下类库：
@@ -15,7 +15,8 @@ RxNetWork依赖以下类库：
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.android.support:support-annotations:25.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
+
 
 如果不想使用RxNetWork依赖的类库，请用`exclude`排除掉
 

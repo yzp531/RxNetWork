@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import com.rxnetwork.bus.RxBus;
 import com.rxnetwork.manager.RxNetWork;
 import com.rxnetwork.manager.RxNetWorkListener;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
                 onRefresh();
             }
         });
+        RxBus.getInstance().send("tag");
     }
 
     @Override

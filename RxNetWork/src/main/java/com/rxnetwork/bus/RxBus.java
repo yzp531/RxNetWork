@@ -3,7 +3,7 @@ package com.rxnetwork.bus;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.ArrayMap;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.rxnetwork.util.RxUtils;
