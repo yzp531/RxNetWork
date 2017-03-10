@@ -21,7 +21,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * by y on 2017/2/22.
@@ -39,7 +38,6 @@ public class RxNetWork {
     private Interceptor mHeaderInterceptor = null;
     private Interceptor mCacheInterceptor = null;
     private Cache mCache = null;
-    private CompositeSubscription compositeSubscription = null;
 
     private RxNetWork() {
     }
@@ -109,18 +107,12 @@ public class RxNetWork {
         return this;
     }
 
-    public void clearSubscription() {
-        if (!RxUtils.isEmpty(compositeSubscription) && !compositeSubscription.isUnsubscribed()) {
-            compositeSubscription.clear();
-        }
-    }
 
     public static <T> T observable(Class<T> service) {
         return getInstance().getRetrofit().create(service);
     }
 
     public <M> void getApi(Observable<M> observable, final RxNetWorkListener<M> listener) {
-        compositeSubscription = new CompositeSubscription();
         listener.onNetWorkStart();
         Subscription subscribe = observable
                 .subscribeOn(Schedulers.io())
@@ -141,7 +133,7 @@ public class RxNetWork {
                         listener.onNetWorkSuccess(m);
                     }
                 });
-        compositeSubscription.add(subscribe);
+        RxSubscriptionManager.getInstance().addSubscription(subscribe);
     }
 
 

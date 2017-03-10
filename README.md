@@ -5,7 +5,7 @@ this is android network ,and RxBus
 
 > gradle:
 
-	compile 'com.ydevelop:rxNetWork:0.0.3'
+	compile 'com.ydevelop:rxNetWork:0.0.4'
 
 
 RxNetWork依赖以下类库：
@@ -113,7 +113,7 @@ CallAdapter.Factory
 
 > 配置Log
 
-如果使用默认的`okhttp`,配置Header需要如下操作：
+如果使用默认的`okhttp`,配置Log需要如下操作：
 
         RxNetWork
                 .getInstance()
@@ -121,9 +121,13 @@ CallAdapter.Factory
 
 
 
-> 取消订阅
+> 取消当前订阅
 
-	RxNetWork.getInstance().clearSubscription();
+	RxSubscriptionManager.getInstance().unSubscription();
+
+> 取消所有订阅
+
+	RxSubscriptionManager.getInstance().clearSubscription();
 
 > RxBus使用：
 

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.rxnetwork.bus.RxBus;
 import com.rxnetwork.manager.RxNetWork;
 import com.rxnetwork.manager.RxNetWorkListener;
+import com.rxnetwork.manager.RxSubscriptionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNetWorkStart() {
-        RxNetWork.getInstance().clearSubscription();
         swipeRefreshLayout.setRefreshing(true);
     }
 
@@ -74,6 +74,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RxNetWork.getInstance().clearSubscription();
+        RxSubscriptionManager.getInstance().clearSubscription();
     }
 }
