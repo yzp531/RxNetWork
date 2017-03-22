@@ -3,6 +3,8 @@ this is android network ,and RxBus
 
 基于rxjava1.x and retrofit2.x 版本的一个网络请求简化库
 
+
+[rxJsoupNetWork](https://github.com/7449/RxNetWork/tree/RxJsoupNetWork):简化Jsoup网络请求
 > gradle:
 
 	compile 'com.ydevelop:rxNetWork:0.0.4'
