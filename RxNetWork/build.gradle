@@ -27,7 +27,7 @@ publish {
     userOrg = 'ydevelop'
     groupId = 'com.ydevelop'
     artifactId = 'rxNetWork'
-    publishVersion = '0.0.4'
+    publishVersion = '0.0.5'
     desc = 'this is rxNetWork'
     website = 'https://github.com/7449/RxNetWork'
 }

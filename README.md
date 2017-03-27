@@ -5,7 +5,7 @@ this is android network ,and RxBus
 
 > gradle:
 
-	compile 'com.ydevelop:rxNetWork:0.0.4'
+	compile 'com.ydevelop:rxNetWork:0.0.5'
 
 
 RxNetWork依赖以下类库：

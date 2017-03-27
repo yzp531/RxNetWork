@@ -9,6 +9,8 @@ import android.util.Log;
 import com.rxnetwork.util.RxUtils;
 
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
@@ -76,6 +78,8 @@ public class RxBus {
         }
         compositeSubscription.add(subject
                 .ofType(service)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new RxBusSubscriber<T>() {
                             @Override

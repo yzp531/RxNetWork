@@ -19,13 +19,11 @@ public class RxSubscriptionManager {
     }
 
     public void clearSubscription() {
-        if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
-            compositeSubscription.clear();
-        }
+        compositeSubscription.clear();
     }
 
     public void unSubscription() {
-        if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
+        if (!compositeSubscription.isUnsubscribed()) {
             compositeSubscription.unsubscribe();
         }
     }
