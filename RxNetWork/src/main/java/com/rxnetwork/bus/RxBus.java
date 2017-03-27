@@ -1,7 +1,5 @@
 package com.rxnetwork.bus;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
@@ -19,7 +17,6 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * by y on 2017/2/22.
  */
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public class RxBus {
 
     private final ArrayMap<Object, Subject<Object, Object>> rxMap;

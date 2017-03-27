@@ -1,31 +1,59 @@
 # RxNetWork
 this is android network ,and RxBus
 
-基于rxjava1.x and retrofit2.x 版本的一个网络请求简化库
+android 网络请求简化库
 
+## 分支
 
-[rxJsoupNetWork](https://github.com/7449/RxNetWork/tree/RxJsoupNetWork):简化Jsoup网络请求
-> gradle:
+#### master
+
+> rx1.x and retrofit2 
+
+###### gradle
 
 	compile 'com.ydevelop:rxNetWork:0.0.5'
 
+#### rx2NetWork
 
-RxNetWork依赖以下类库：
+> rx2.x and retrofit2 
 
-    compile 'io.reactivex:rxjava:1.2.6'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.android.support:support-v4:25.0.0'
+###### gradle
 
+	compile 'com.ydevelop:rx2NetWork:0.0.1'
 
-如果不想使用RxNetWork依赖的类库，请用`exclude`排除掉
+#### rxJsoupNetWork
 
-> 项目试用：
+> rx1.x and jsoup
+
+###### gradle
+
+	compile 'com.ydevelop:rxJsoupNetWork:0.0.1'
+
+#### rx2JsoupNetWork
+
+> rx1.x and jsoup
+
+###### gradle
+
+	compile 'com.ydevelop:rx2JsoupNetWork:0.0.1'
+
+> RxNetWork项目试用：
 
 [https://github.com/7449/ZLSimple](https://github.com/7449/ZLSimple)
 
+> RxJsoupNetWork项目试用
+
+[https://github.com/7449/JsoupSample](https://github.com/7449/JsoupSample)
+
+#### [rx2NetWork README](https://github.com/7449/RxNetWork/blob/rx2NetWork/README.md)
+
+#### [rxJsoupNetWork README](https://github.com/7449/RxNetWork/blob/RxJsoupNetWork/README.md)
+
+#### [rx2JsoupNetWork README]():
+
+[https://github.com/7449/JsoupSample](https://github.com/7449/RxNetWork/blob/rx2JsoupNetWork/README.md)
+
+#### rxNetWork README:
 
 > 建议初始化:
 
