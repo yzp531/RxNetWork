@@ -7,7 +7,7 @@ android 网络请求简化库
 
 #### master
 
-> rx1.x and retrofit2 
+> rxJava1.x and retrofit2 
 
 ###### gradle
 
@@ -15,7 +15,7 @@ android 网络请求简化库
 
 #### rx2NetWork
 
-> rx2.x and retrofit2 
+> rxJava2.x and retrofit2 
 
 ###### gradle
 
@@ -23,7 +23,7 @@ android 网络请求简化库
 
 #### rxJsoupNetWork
 
-> rx1.x and jsoup
+> rxJava1.x and jsoup
 
 ###### gradle
 
@@ -31,7 +31,7 @@ android 网络请求简化库
 
 #### rx2JsoupNetWork
 
-> rx1.x and jsoup
+> rxJava2.x and jsoup
 
 ###### gradle
 
@@ -49,9 +49,7 @@ android 网络请求简化库
 
 #### [rxJsoupNetWork README](https://github.com/7449/RxNetWork/blob/RxJsoupNetWork/README.md)
 
-#### [rx2JsoupNetWork README]():
-
-[https://github.com/7449/JsoupSample](https://github.com/7449/RxNetWork/blob/rx2JsoupNetWork/README.md)
+#### [rx2JsoupNetWork README](https://github.com/7449/RxNetWork/blob/rx2JsoupNetWork/README.md):
 
 #### rxNetWork README:
 
