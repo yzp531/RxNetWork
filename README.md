@@ -11,7 +11,7 @@ android 网络请求简化库
 
 ###### gradle
 
-	compile 'com.ydevelop:rxNetWork:0.0.5'
+	compile 'com.ydevelop:rxNetWork:0.0.6'
 
 #### rx2NetWork
 
@@ -19,7 +19,7 @@ android 网络请求简化库
 
 ###### gradle
 
-	compile 'com.ydevelop:rx2NetWork:0.0.1'
+	compile 'com.ydevelop:rx2NetWork:0.0.2'
 
 #### rxJsoupNetWork
 
@@ -27,7 +27,7 @@ android 网络请求简化库
 
 ###### gradle
 
-	compile 'com.ydevelop:rxJsoupNetWork:0.0.1'
+	compile 'com.ydevelop:rxJsoupNetWork:0.0.2'
 
 #### rx2JsoupNetWork
 
@@ -35,7 +35,7 @@ android 网络请求简化库
 
 ###### gradle
 
-	compile 'com.ydevelop:rx2JsoupNetWork:0.0.1'
+	compile 'com.ydevelop:rx2JsoupNetWork:0.0.2'
 
 > RxNetWork项目试用：
 
@@ -88,14 +88,14 @@ CallAdapter.Factory
 `getApi` 需要两个参数，一个`Observable`还有一个网络回调`RxNetWorkListener`
 
 
-        RxNetWork.getInstance().getApi(
+        Subscription api = RxNetWork.getInstance().getApi(
 
                 RxNetWork.observable(Api.ZLService.class).getList("", 20, 0),
 
                 new RxNetWorkListener<List<ListModel>>() {
                     @Override
                     public void onNetWorkStart() {
-                        
+
                     }
 
                     @Override
@@ -151,7 +151,9 @@ CallAdapter.Factory
 
 > 取消当前订阅
 
-	RxSubscriptionManager.getInstance().unSubscription();
+请求网络时会返回当前的`Subscription`,框架已经主动把`Subscription` 添加到了`CompositeSubscription`里面
+
+	RxSubscriptionManager.getInstance().unSubscription(Subscription);
 
 > 取消所有订阅
 
@@ -181,7 +183,7 @@ CallAdapter.Factory
 
 #### 解绑：
 
-	RxBus.getInstance().unregister("tag");
+	RxBus.getInstance().unregister("tag"，Subscription);
 
 
 

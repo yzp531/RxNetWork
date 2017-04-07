@@ -112,7 +112,7 @@ public class RxNetWork {
         return getInstance().getRetrofit().create(service);
     }
 
-    public <M> void getApi(Observable<M> observable, final RxNetWorkListener<M> listener) {
+    public <M> Subscription getApi(Observable<M> observable, final RxNetWorkListener<M> listener) {
         listener.onNetWorkStart();
         Subscription subscribe = observable
                 .subscribeOn(Schedulers.io())
@@ -134,6 +134,7 @@ public class RxNetWork {
                     }
                 });
         RxSubscriptionManager.getInstance().addSubscription(subscribe);
+        return subscribe;
     }
 
 

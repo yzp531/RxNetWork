@@ -2,11 +2,12 @@ package com.rxnetwork.bus;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 
+import com.rxnetwork.util.LogI;
 import com.rxnetwork.util.RxUtils;
 
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -21,6 +22,8 @@ public class RxBus {
 
     private final ArrayMap<Object, Subject<Object, Object>> rxMap;
     private CompositeSubscription compositeSubscription;
+
+    private static final String TAG = "RxBus";
 
     private RxBus() {
         rxMap = new ArrayMap<>();
@@ -53,7 +56,7 @@ public class RxBus {
     public void send(@NonNull Object tag,
                      @NonNull Object message) {
         if (RxUtils.isEmpty(rxMap, tag)) {
-            Log.i((String) tag, "发送消息");
+            LogI.i(TAG, "tag:" + tag + "  message:" + message);
             rxMap.get(tag).onNext(message);
         }
     }
@@ -65,15 +68,15 @@ public class RxBus {
      * @param service  类型
      * @param callBack 回调
      */
-    public <T> void toSubscription(@NonNull final Object tag,
-                                   @NonNull Class<T> service,
-                                   @NonNull final RxBusCallBack<T> callBack) {
+    public <T> Subscription toSubscription(@NonNull final Object tag,
+                                           @NonNull Class<T> service,
+                                           @NonNull final RxBusCallBack<T> callBack) {
         Subject<Object, Object> subject = rxMap.get(tag);
         if (RxUtils.isEmpty(subject)) {
             subject = new SerializedSubject<>(PublishSubject.create());
             rxMap.put(tag, subject);
         }
-        compositeSubscription.add(subject
+        Subscription subscribe = subject
                 .ofType(service)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +93,9 @@ public class RxBus {
                                 super.onNext(t);
                                 callBack.onNext(t);
                             }
-                        }));
+                        });
+        compositeSubscription.add(subscribe);
+        return subscribe;
 
     }
 
@@ -98,22 +103,49 @@ public class RxBus {
     /**
      * 取消订阅
      *
-     * @param tag 标志
+     * @param tag          标志
+     * @param subscription 当前tag关联的subscription
      */
-    public void unregister(@NonNull Object tag) {
+    public void unregister(@NonNull Object tag, @NonNull Subscription subscription) {
+        LogI.i(TAG, "RxMap:" + rxMap.size() +
+                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
+                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
+        if (!subscription.isUnsubscribed()) {
+            compositeSubscription.remove(subscription);
+            LogI.i(TAG, "compositeSubscription.remove");
+        }
+
         if (RxUtils.isEmpty(rxMap, tag)) {
             rxMap.remove(tag);
+            LogI.i(TAG, "unregister:" + tag);
         }
+        LogI.i(TAG, "RxMap:" + rxMap.size() +
+                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
+                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
     }
 
     /**
      * 取消所有订阅
      */
     public void unregisterAll() {
-        if (!compositeSubscription.isUnsubscribed()) {
+        LogI.i(TAG, "RxMap:" + rxMap.size() +
+                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
+                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
+
+        if (!compositeSubscription.isUnsubscribed() && compositeSubscription.hasSubscriptions()) {
             compositeSubscription.clear();
+            LogI.i(TAG, "compositeSubscription.clear");
         }
+
         rxMap.clear();
+
+        LogI.i(TAG, "RxMap:" + rxMap.size() +
+                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
+                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
+    }
+
+    public CompositeSubscription getCompositeSubscription() {
+        return compositeSubscription;
     }
 
     private static class RxBusSubscriber<T> extends Subscriber<T> {
