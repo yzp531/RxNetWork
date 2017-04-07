@@ -107,41 +107,18 @@ public class RxBus {
      * @param subscription 当前tag关联的subscription
      */
     public void unregister(@NonNull Object tag, @NonNull Subscription subscription) {
-        LogI.i(TAG, "RxMap:" + rxMap.size() +
-                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
-                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
-        if (!subscription.isUnsubscribed()) {
-            compositeSubscription.remove(subscription);
-            LogI.i(TAG, "compositeSubscription.remove");
-        }
-
+        compositeSubscription.remove(subscription);
         if (RxUtils.isEmpty(rxMap, tag)) {
             rxMap.remove(tag);
-            LogI.i(TAG, "unregister:" + tag);
         }
-        LogI.i(TAG, "RxMap:" + rxMap.size() +
-                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
-                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
     }
 
     /**
      * 取消所有订阅
      */
     public void unregisterAll() {
-        LogI.i(TAG, "RxMap:" + rxMap.size() +
-                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
-                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
-
-        if (!compositeSubscription.isUnsubscribed() && compositeSubscription.hasSubscriptions()) {
-            compositeSubscription.clear();
-            LogI.i(TAG, "compositeSubscription.clear");
-        }
-
+        compositeSubscription.clear();
         rxMap.clear();
-
-        LogI.i(TAG, "RxMap:" + rxMap.size() +
-                "  isUnsubscribed:" + compositeSubscription.isUnsubscribed() +
-                "  hasSubscriptions:" + compositeSubscription.hasSubscriptions());
     }
 
     public CompositeSubscription getCompositeSubscription() {

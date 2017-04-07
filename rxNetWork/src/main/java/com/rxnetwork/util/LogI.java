@@ -10,7 +10,7 @@ public class LogI {
 
     private static final String TAG = "RxNetWork: ";
 
-    private static boolean isLog = false;
+    private static boolean isLog = true;
 
     public static void isLog(boolean isLog) {
         LogI.isLog = isLog;

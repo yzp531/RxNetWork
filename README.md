@@ -11,7 +11,7 @@ android 网络请求简化库
 
 ###### gradle
 
-	compile 'com.ydevelop:rxNetWork:0.0.6'
+	compile 'com.ydevelop:rxNetWork:0.0.7'
 
 #### rx2NetWork
 
