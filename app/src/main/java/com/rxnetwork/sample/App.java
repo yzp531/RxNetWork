@@ -11,12 +11,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        /**
-         * 建议这里设置统一设置参数
-         */
-//        RxNetWork
-//                .getInstance()
-//                .setBaseUrl("your base url");
     }
 
 }

@@ -1,4 +1,4 @@
-package io.reactivex.network.bus;
+package io.reactivex.jsoup.network.bus;
 
 /**
  * by y on 2017/2/23

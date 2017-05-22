@@ -1,4 +1,4 @@
-package io.reactivex.network.bus;
+package io.reactivex.jsoup.network.bus;
 
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.Subject;

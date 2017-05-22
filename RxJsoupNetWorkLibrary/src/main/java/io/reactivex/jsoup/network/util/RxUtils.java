@@ -1,4 +1,4 @@
-package io.reactivex.network.util;
+package io.reactivex.jsoup.network.util;
 
 /**
  * by y on 2017/2/22.

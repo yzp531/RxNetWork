@@ -26,16 +26,15 @@ android {
 publish {
     userOrg = 'ydevelop'
     groupId = 'com.ydevelop'
-    artifactId = 'rxNetWork'
-    publishVersion = '0.0.8'
-    desc = 'this is rxnetwork'
-    website = 'https://github.com/7449/RxNetWork'
+    artifactId = 'rxJsoupNetWork'
+    publishVersion = '0.0.3'
+    desc = 'this is rxJsoupNetWork'
+    website = 'https://github.com/7449/RxNetWork/tree/RxJsoupNetWork'
 }
 dependencies {
+    compile 'com.android.support:support-v4:25.0.0'
+    compile 'org.jsoup:jsoup:1.10.2'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.android.support:support-v4:25.0.0'
+    compile 'org.jsoup:jsoup:1.10.2'
 }

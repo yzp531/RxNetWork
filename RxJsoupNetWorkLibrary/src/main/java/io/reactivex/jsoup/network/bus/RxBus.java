@@ -1,4 +1,4 @@
-package io.reactivex.network.bus;
+package io.reactivex.jsoup.network.bus;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.network.util.RxUtils;
+import io.reactivex.jsoup.network.util.RxUtils;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;

@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import io.reactivex.network.bus.RxBus;
-import io.reactivex.network.bus.RxBusCallBack;
+import io.reactivex.jsoup.network.bus.RxBus;
+import io.reactivex.jsoup.network.bus.RxBusCallBack;
 
 /**
  * by y on 2017/5/22
