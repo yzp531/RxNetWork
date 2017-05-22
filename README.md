@@ -3,40 +3,6 @@ this is android network ,and RxBus
 
 android 网络请求简化库
 
-## 分支
-
-#### master
-
-> rxJava1.x and retrofit2 
-
-###### gradle
-
-	compile 'com.ydevelop:rxNetWork:0.0.7'
-
-#### rx2NetWork
-
-> rxJava2.x and retrofit2 
-
-###### gradle
-
-	compile 'com.ydevelop:rx2NetWork:0.0.2'
-
-#### rxJsoupNetWork
-
-> rxJava1.x and jsoup
-
-###### gradle
-
-	compile 'com.ydevelop:rxJsoupNetWork:0.0.2'
-
-#### rx2JsoupNetWork
-
-> rxJava2.x and jsoup
-
-###### gradle
-
-	compile 'com.ydevelop:rx2JsoupNetWork:0.0.2'
-
 > RxNetWork项目试用：
 
 [https://github.com/7449/ZLSimple](https://github.com/7449/ZLSimple)
@@ -45,13 +11,8 @@ android 网络请求简化库
 
 [https://github.com/7449/JsoupSample](https://github.com/7449/JsoupSample)
 
-#### [rx2NetWork README](https://github.com/7449/RxNetWork/blob/rx2NetWork/README.md)
+> compile 'com.ydevelop:rxNetWork:0.0.8'
 
-#### [rxJsoupNetWork README](https://github.com/7449/RxNetWork/blob/RxJsoupNetWork/README.md)
-
-#### [rx2JsoupNetWork README](https://github.com/7449/RxNetWork/blob/rx2JsoupNetWork/README.md):
-
-#### rxNetWork README:
 
 > 建议初始化:
 
@@ -85,14 +46,18 @@ CallAdapter.Factory
 
 这里假设在`Application`里已经自定义好`BaseUrl`;
 
-`getApi` 需要两个参数，一个`Observable`还有一个网络回调`RxNetWorkListener`
+参数一： tag，用于取消网络请求
+参数二： 回调，网络请求开始，异常，结束，成功之类的状态
 
 
-        Subscription api = RxNetWork.getInstance().getApi(
+* 取消网络请求：
 
-                RxNetWork.observable(Api.ZLService.class).getList("", 20, 0),
+	RxNetWork.getInstance().cancel(tag);
 
-                new RxNetWorkListener<List<ListModel>>() {
+
+        Disposable api = RxNetWork
+                .getInstance()
+                .getApi(getClass().getSimpleName(), new RxNetWorkListener<List<ListModel>>() {
                     @Override
                     public void onNetWorkStart() {
 
@@ -104,7 +69,7 @@ CallAdapter.Factory
                     }
 
                     @Override
-                    public void onNetWorkCompleted() {
+                    public void onNetWorkComplete() {
 
                     }
 
@@ -112,9 +77,13 @@ CallAdapter.Factory
                     public void onNetWorkSuccess(List<ListModel> data) {
 
                     }
-                }
 
-        );
+                    @NonNull
+                    @Override
+                    public Observable<List<ListModel>> getObservable(Retrofit retrofit) {
+                        return null;
+                    }
+                });
 
 
 
@@ -147,43 +116,36 @@ CallAdapter.Factory
                 .getInstance()
                 .setLogInterceptor();
 
-
-
-> 取消当前订阅
-
-请求网络时会返回当前的`Subscription`,框架已经主动把`Subscription` 添加到了`CompositeSubscription`里面
-
-	RxSubscriptionManager.getInstance().unSubscription(Subscription);
-
-> 取消所有订阅
-
-	RxSubscriptionManager.getInstance().clearSubscription();
-
 > RxBus使用：
 
 
 #### 发送消息：
 
-        RxBus.getInstance().send("tag","message");
-        RxBus.getInstance().send("tag");
+        RxBus.getInstance().post("tag","message");
+        RxBus.getInstance().post("tag");
 
-#### 接受消息：
+#### 注册消息体：
 
-        RxBus.getInstance().toSubscription("tag", String.class, new RxBusCallBack<String>() {
+        RxBus.getInstance().register(getClass().getSimpleName(), new RxBusCallBack<String>() {
             @Override
-            public void onNext(String data) {
-                
+            public void onBusNext(String s) {
+
             }
 
             @Override
-            public void onError(Throwable throwable) {
+            public void onBusError(Throwable throwable) {
 
+            }
+
+            @Override
+            public Class<String> busOfType() {
+                return String.class;
             }
         });
 
 #### 解绑：
 
-	RxBus.getInstance().unregister("tag"，Subscription);
+	RxBus.getInstance().unregister(tag);
 
 
 

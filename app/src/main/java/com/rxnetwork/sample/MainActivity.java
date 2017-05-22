@@ -1,155 +1,137 @@
 package com.rxnetwork.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.rxnetwork.bus.RxBus;
-import com.rxnetwork.bus.RxBusCallBack;
-import com.rxnetwork.manager.RxNetWork;
-import com.rxnetwork.manager.RxNetWorkListener;
-import com.rxnetwork.manager.RxSubscriptionManager;
+import com.rxnetwork.sample.samplebus.A;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscription;
+import io.reactivex.Observable;
+import io.reactivex.network.bus.RxBus;
+import io.reactivex.network.bus.SimpleRxBusCallBack;
+import io.reactivex.network.manager.RxNetWork;
+import io.reactivex.network.manager.RxNetWorkListener;
+import retrofit2.Retrofit;
+
 
 public class MainActivity extends AppCompatActivity
-        implements RxNetWorkListener<List<ListModel>>, SwipeRefreshLayout.OnRefreshListener {
+        implements RxNetWorkListener<List<ListModel>>, View.OnClickListener {
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private static final String BUS_TAG = "bus_tag";
+
     private MainAdapter adapter;
-    private static final String BUS_TAG_ONE = "BUS_TAG_ONE";
-    private static final String BUS_TAG_TWO = "BUS_TAG_TWO";
-    private Subscription dailySubscription;
+    private AppCompatTextView textView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        textView = (AppCompatTextView) findViewById(R.id.bus_message);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         adapter = new MainAdapter(new ArrayList<ListModel>());
         recyclerView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                onRefresh();
-            }
-        });
-        final TextView textView = (TextView) findViewById(R.id.bus_message);
-        final Subscription one_subscription = RxBus.getInstance().toSubscription(
-                BUS_TAG_ONE,
-                String.class,
-                new RxBusCallBack<String>() {
+
+
+        RxBus.getInstance().register(BUS_TAG,
+                new SimpleRxBusCallBack<String>() {
                     @Override
-                    public void onNext(String data) {
-                        textView.setText(TextUtils.concat("RxBus Message:", data));
+                    public void onBusNext(String s) {
+                        super.onBusNext(s);
+                        textView.setText(TextUtils.concat("RxBus Message:", s));
                     }
 
                     @Override
-                    public void onError(Throwable throwable) {
-
+                    public Class<String> busOfType() {
+                        return String.class;
                     }
                 });
-        final Subscription two_subscription = RxBus.getInstance().toSubscription(
-                BUS_TAG_TWO,
-                String.class,
-                new RxBusCallBack<String>() {
-                    @Override
-                    public void onNext(String data) {
-                        textView.setText(TextUtils.concat("RxBus Message:", data));
-                    }
+        findViewById(R.id.btn_send).setOnClickListener(this);
+        findViewById(R.id.btn_unregister).setOnClickListener(this);
+        findViewById(R.id.btn_test_bus).setOnClickListener(this);
+        findViewById(R.id.btn_start_network).setOnClickListener(this);
+        findViewById(R.id.btn_cancel_network).setOnClickListener(this);
 
-                    @Override
-                    public void onError(Throwable throwable) {
 
-                    }
-                });
-
-        findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RxBus.getInstance().send(BUS_TAG_ONE);
-                textView.setText("");
-            }
-        });
-
-        findViewById(R.id.btn_send_message).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                RxBus.getInstance().send(BUS_TAG_TWO);
-            }
-        });
-
-        findViewById(R.id.btn_unregister).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                RxBus.getInstance().unregister(BUS_TAG_TWO, two_subscription);
-            }
-        });
-        findViewById(R.id.btn_unregisterAll).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                RxBus.getInstance().unregister(BUS_TAG_ONE, one_subscription);
-            }
-        });
-        findViewById(R.id.btn_unregister_network).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RxSubscriptionManager.getInstance().unSubscription(dailySubscription);
-            }
-        });
     }
 
     @Override
-    public void onRefresh() {
-        dailySubscription = RxNetWork
-                .getInstance()
-                .setBaseUrl(Api.ZL_BASE_API)
-                .setLogInterceptor(new SimpleLogInterceptor())
-                .getApi(RxNetWork.observable(Api.ZLService.class).getList("daily", 20, 0), this);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_send:
+                RxBus.getInstance().post(BUS_TAG, "解绑之后除非再次注册,否则会强制抛出异常");
+                break;
+            case R.id.btn_unregister:
+                KLog.i(RxBus.getInstance().unregister(BUS_TAG));
+                break;
+            case R.id.btn_test_bus:
+                startActivity(A.class);
+                break;
+            case R.id.btn_start_network:
+                RxNetWork
+                        .getInstance()
+                        .setBaseUrl(Api.ZL_BASE_API)
+                        .setLogInterceptor(new SimpleLogInterceptor())
+                        .getApi(getClass().getSimpleName(), this);
+                break;
+            case R.id.btn_cancel_network:
+                RxNetWork.getInstance().cancel(getClass().getSimpleName());
+                break;
+        }
+        textView.setText("");
+    }
+
+    protected void startActivity(Class<?> clz) {
+        Intent intent = new Intent(getApplicationContext(), clz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
     public void onNetWorkStart() {
-        swipeRefreshLayout.setRefreshing(true);
+        adapter.clear();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onNetWorkError(Throwable e) {
-        swipeRefreshLayout.setRefreshing(false);
-        Toast.makeText(getApplicationContext(), "net work error", Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getApplicationContext(), "net work error:" + e.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onNetWorkCompleted() {
-        swipeRefreshLayout.setRefreshing(false);
+    public void onNetWorkComplete() {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onNetWorkSuccess(List<ListModel> data) {
-        adapter.clear();
         adapter.addAll(data);
     }
 
+    @NonNull
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        RxSubscriptionManager.getInstance().clearSubscription();
-        // 由于 Subscription 会在 onError 或 onCompleted 后自动取消订阅，所以这里不是必须的
-        //只有突发情况下，由使用者手动取消订阅，例如 退出Activity 时 网络请求还没有 完成，这个时候就应该由使用者手动取消订阅
+    public Observable<List<ListModel>> getObservable(Retrofit retrofit) {
+        return retrofit.create(Api.ZLService.class).getList("daily", 20, 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        KLog.i(RxBus.getInstance().unregisterAll());
     }
 }

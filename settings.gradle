@@ -1,1 +1,1 @@
-include ':app', ':rxNetWork'
+include ':app', ':RxNetWorkLibrary'

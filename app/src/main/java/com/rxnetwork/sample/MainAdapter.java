@@ -15,11 +15,11 @@ import java.util.List;
  * by y on 2017/2/27
  */
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainAdapterHolder> {
+class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainAdapterHolder> {
 
     private List<ListModel> listModels = null;
 
-    public MainAdapter(List<ListModel> listModels) {
+    MainAdapter(List<ListModel> listModels) {
         this.listModels = listModels;
     }
 
@@ -49,14 +49,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainAdapterHol
         return listModels == null ? 0 : listModels.size();
     }
 
-    public void addAll(List<ListModel> data) {
+    void addAll(List<ListModel> data) {
         if (listModels != null) {
             listModels.addAll(data);
             notifyDataSetChanged();
         }
     }
 
-    public void clear() {
+    void clear() {
         if (listModels != null) {
             listModels.clear();
             notifyDataSetChanged();

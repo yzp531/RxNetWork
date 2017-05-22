@@ -12,7 +12,7 @@ import okhttp3.ResponseBody;
  * by y on 2017/2/22.
  */
 
-public class SimpleLogInterceptor implements Interceptor {
+class SimpleLogInterceptor implements Interceptor {
 
     private static final String TAG = "RxNetWorkApiLog";
     private static final String CONTENT_TITLE = "Api Content-->:";

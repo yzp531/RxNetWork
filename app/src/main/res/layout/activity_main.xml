@@ -10,56 +10,74 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="RxBus Send" />
+            android:text="@string/post" />
 
-        <Button
-            android:id="@+id/btn_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="RxBus Send message" />
 
-        <Button
-            android:id="@+id/btn_unregisterAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="unregister send" />
-
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_unregister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="unregister send message" />
+            android:text="@string/unregister" />
+
     </LinearLayout>
 
-    <TextView
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_test_bus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_bus" />
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/bus_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btn_unregister_network"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="unregister network" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/activity_main"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_start_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="请求网络" />
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_cancel_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取消请求网络" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:progressBarStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>
+
+
 </LinearLayout>

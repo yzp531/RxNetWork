@@ -1,31 +1,34 @@
-package com.rxnetwork.manager;
+package io.reactivex.network.manager;
 
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 
 import com.google.gson.Gson;
-import com.rxnetwork.util.RxUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.network.util.RxUtils;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * by y on 2017/2/22.
  */
 public class RxNetWork {
+
+    public static final String TAG = "RxNetWork";
+    private final ArrayMap<Object, Disposable> arrayMap;
     private int timeout_time = 15;
     private boolean isRetryOnConnectionFailure = true;
     private Gson mGson = null;
@@ -40,10 +43,10 @@ public class RxNetWork {
     private Cache mCache = null;
 
     private RxNetWork() {
+        arrayMap = new ArrayMap<>();
     }
 
     private static final class RxNetWorkHolder {
-
         private static final RxNetWork rxNetWork = new RxNetWork();
     }
 
@@ -107,34 +110,48 @@ public class RxNetWork {
         return this;
     }
 
-
-    public static <T> T observable(Class<T> service) {
-        return getInstance().getRetrofit().create(service);
+    public <M> Disposable getApi(final RxNetWorkListener<M> listener) {
+        return getApi(TAG, listener);
     }
 
-    public <M> Subscription getApi(Observable<M> observable, final RxNetWorkListener<M> listener) {
+
+    public <M> Disposable getApi(@NonNull Object tag, final RxNetWorkListener<M> listener) {
+        if (listener == null) {
+            throw new NullPointerException("listener is null");
+        }
+        cancel(tag);
         listener.onNetWorkStart();
-        Subscription subscribe = observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<M>() {
-                    @Override
-                    public void onCompleted() {
-                        listener.onNetWorkCompleted();
-                    }
+        Disposable disposable =
+                listener.getObservable(getRetrofit())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableObserver<M>() {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onNetWorkError(e);
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                listener.onNetWorkError(e);
+                            }
 
-                    @Override
-                    public void onNext(M m) {
-                        listener.onNetWorkSuccess(m);
-                    }
-                });
-        RxSubscriptionManager.getInstance().addSubscription(subscribe);
-        return subscribe;
+                            @Override
+                            public void onComplete() {
+                                listener.onNetWorkComplete();
+                            }
+
+                            @Override
+                            public void onNext(M m) {
+                                listener.onNetWorkSuccess(m);
+                            }
+                        });
+        arrayMap.put(tag, disposable);
+        return disposable;
+    }
+
+    public void cancel(@NonNull Object tag) {
+        Disposable disposable = arrayMap.get(tag);
+        if (!RxUtils.isEmpty(disposable) && !disposable.isDisposed()) {
+            disposable.dispose();
+            arrayMap.remove(tag);
+        }
     }
 
 
@@ -182,6 +199,6 @@ public class RxNetWork {
     }
 
     private void rxNetWorkAdapterFactory() {
-        mAdapterFactory = RxJavaCallAdapterFactory.create();
+        mAdapterFactory = RxJava2CallAdapterFactory.create();
     }
 }
