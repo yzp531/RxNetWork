@@ -73,7 +73,6 @@ public class RxJsoupNetWork {
         if (listener == null) {
             throw new NullPointerException("listener is null");
         }
-        cancel(tag);
         listener.onNetWorkStart();
         DisposableObserver<T> disposableObserver = Observable
                 .create(

@@ -31,17 +31,17 @@ public class RxBus {
         private static final RxBus rxBus = new RxBus();
     }
 
-    public void post(@NonNull Object obj) {
-        post(obj, obj);
+    public boolean post(@NonNull Object obj) {
+        return post(obj, obj);
     }
 
-    public void post(@NonNull Object tag, @NonNull Object obj) {
+    public boolean post(@NonNull Object tag, @NonNull Object obj) {
         RxBusEvent rxBusEvent = rxBusEventArrayMap.get(tag);
-        if (RxUtils.isEmpty(rxBusEvent) || RxUtils.isEmpty(rxBusEvent.subject)) {
-            throw new RxBusException("Subject or RxBusEvent is null, please check register");
-        } else {
+        if (!RxUtils.isEmpty(rxBusEvent)) {
             rxBusEvent.subject.onNext(obj);
+            return true;
         }
+        return false;
     }
 
     /**
