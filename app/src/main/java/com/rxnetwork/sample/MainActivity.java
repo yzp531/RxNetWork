@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:
-                RxBus.getInstance().post(BUS_TAG, "解绑之后除非再次注册,否则会强制抛出异常");
+                RxBus.getInstance().post(BUS_TAG, "传递对象");
                 break;
             case R.id.btn_unregister:
                 KLog.i(RxBus.getInstance().unregister(BUS_TAG));
