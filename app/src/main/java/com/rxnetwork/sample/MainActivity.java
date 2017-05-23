@@ -2,7 +2,6 @@ package com.rxnetwork.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,12 +17,10 @@ import com.socks.library.KLog;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.network.bus.RxBus;
 import io.reactivex.network.bus.SimpleRxBusCallBack;
 import io.reactivex.network.manager.RxNetWork;
 import io.reactivex.network.manager.RxNetWorkListener;
-import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity
@@ -86,7 +83,9 @@ public class MainActivity extends AppCompatActivity
                         .getInstance()
                         .setBaseUrl(Api.ZL_BASE_API)
                         .setLogInterceptor(new SimpleLogInterceptor())
-                        .getApi(getClass().getSimpleName(), this);
+                        .getApi(getClass().getSimpleName(),
+                                RxNetWork.observable(Api.ZLService.class)
+                                        .getList("daily", 20, 0), this);
                 break;
             case R.id.btn_cancel_network:
                 RxNetWork.getInstance().cancel(getClass().getSimpleName());
@@ -121,12 +120,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onNetWorkSuccess(List<ListModel> data) {
         adapter.addAll(data);
-    }
-
-    @NonNull
-    @Override
-    public Observable<List<ListModel>> getObservable(Retrofit retrofit) {
-        return retrofit.create(Api.ZLService.class).getList("daily", 20, 0);
     }
 
     @Override

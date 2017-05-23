@@ -11,7 +11,7 @@ android 网络请求简化库
 
 [https://github.com/7449/JsoupSample](https://github.com/7449/JsoupSample)
 
-> compile 'com.ydevelop:rxNetWork:0.0.8'
+> compile 'com.ydevelop:rxNetWork:0.1'
 
 
 > 建议初始化:
@@ -47,7 +47,8 @@ CallAdapter.Factory
 这里假设在`Application`里已经自定义好`BaseUrl`;
 
 参数一： tag，用于取消网络请求
-参数二： 回调，网络请求开始，异常，结束，成功之类的状态
+参数二：observable
+参数三： 回调，网络请求开始，异常，结束，成功之类的状态
 
 
 * 取消网络请求：
@@ -57,7 +58,9 @@ CallAdapter.Factory
 
         Disposable api = RxNetWork
                 .getInstance()
-                .getApi(getClass().getSimpleName(), new RxNetWorkListener<List<ListModel>>() {
+                .getApi(getClass().getSimpleName(),
+                	RxNetWork.observable(),
+                new RxNetWorkListener<List<ListModel>>() {
                     @Override
                     public void onNetWorkStart() {
 
@@ -77,12 +80,7 @@ CallAdapter.Factory
                     public void onNetWorkSuccess(List<ListModel> data) {
 
                     }
-
-                    @NonNull
-                    @Override
-                    public Observable<List<ListModel>> getObservable(Retrofit retrofit) {
-                        return null;
-                    }
+                  
                 });
 
 

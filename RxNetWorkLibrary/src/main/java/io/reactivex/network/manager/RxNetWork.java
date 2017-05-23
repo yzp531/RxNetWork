@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.network.util.RxUtils;
@@ -110,19 +111,23 @@ public class RxNetWork {
         return this;
     }
 
-    public <M> Disposable getApi(final RxNetWorkListener<M> listener) {
-        return getApi(TAG, listener);
+    public static <T> T observable(Class<T> service) {
+        return getInstance().getRetrofit().create(service);
+    }
+
+    public <M> Disposable getApi(@NonNull Observable<M> mObservable, final RxNetWorkListener<M> listener) {
+        return getApi(TAG, mObservable, listener);
     }
 
 
-    public <M> Disposable getApi(@NonNull Object tag, final RxNetWorkListener<M> listener) {
+    public <M> Disposable getApi(@NonNull Object tag, @NonNull Observable<M> observable, final RxNetWorkListener<M> listener) {
         if (listener == null) {
             throw new NullPointerException("listener is null");
         }
         cancel(tag);
         listener.onNetWorkStart();
         Disposable disposable =
-                listener.getObservable(getRetrofit())
+                observable
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableObserver<M>() {
