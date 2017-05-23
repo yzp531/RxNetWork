@@ -124,7 +124,6 @@ public class RxNetWork {
         if (listener == null) {
             throw new NullPointerException("listener is null");
         }
-        cancel(tag);
         listener.onNetWorkStart();
         Disposable disposable =
                 observable
