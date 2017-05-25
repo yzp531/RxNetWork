@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -120,6 +121,12 @@ public class RxJsoupNetWork {
         if (!RxUtils.isEmpty(disposable) && !disposable.isDisposed()) {
             disposable.dispose();
             arrayMap.remove(tag);
+        }
+    }
+
+    public void cancelAll() {
+        for (Map.Entry<Object, Disposable> disposableEntry : arrayMap.entrySet()) {
+            cancel(disposableEntry.getKey());
         }
     }
 
