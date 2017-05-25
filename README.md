@@ -7,7 +7,7 @@ android 网络请求简化库
 
 [https://github.com/7449/JsoupSample](https://github.com/7449/JsoupSample)
 
-	compile 'com.ydevelop:rxJsoupNetWork:0.0.6'
+	compile 'com.ydevelop:rxJsoupNetWork:0.0.7'
 
 
 

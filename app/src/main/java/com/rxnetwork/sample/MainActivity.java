@@ -12,11 +12,21 @@ import com.rxnetwork.sample.samplebus.A;
 import com.socks.library.KLog;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.jsoup.network.bus.RxBus;
 import io.reactivex.jsoup.network.bus.SimpleRxBusCallBack;
 import io.reactivex.jsoup.network.manager.RxJsoupNetWork;
 import io.reactivex.jsoup.network.manager.RxJsoupNetWorkListener;
+import io.reactivex.observers.DisposableObserver;
 
 
 public class MainActivity extends AppCompatActivity
@@ -55,7 +65,71 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.btn_start_network).setOnClickListener(this);
         findViewById(R.id.btn_cancel_network).setOnClickListener(this);
 
+    }
 
+    private void mergeNetWork() {
+        final List<String> list = new ArrayList<>();
+        list.add("http://m.7kk.com/album/photos/67795-1");
+        list.add("http://m.7kk.com/album/photos/67795-2");
+
+        Observable<List<ImageModel>> objectObservable1 = Observable
+                .create(
+                        new ObservableOnSubscribe<List<ImageModel>>() {
+                            @Override
+                            public void subscribe(@NonNull ObservableEmitter<List<ImageModel>> e) throws Exception {
+                                Document document = RxJsoupNetWork.getT(list.get(0));
+                                List<ImageModel> list = new ArrayList<>();
+                                Elements img = document.select("img.lazy-img");
+                                ImageModel imageDetailModel;
+                                for (Element element : img) {
+                                    imageDetailModel = new ImageModel();
+                                    String attr = element.attr("data-original");
+                                    imageDetailModel.url = attr.replace("219_300", "800_0");
+                                    list.add(imageDetailModel);
+                                }
+                                e.onNext(list);
+                                e.onComplete();
+                            }
+                        });
+        Observable<List<ImageModel>> objectObservable2 = Observable
+                .create(
+                        new ObservableOnSubscribe<List<ImageModel>>() {
+                            @Override
+                            public void subscribe(@NonNull ObservableEmitter<List<ImageModel>> e) throws Exception {
+                                Document document = RxJsoupNetWork.getT(list.get(1));
+                                List<ImageModel> list = new ArrayList<>();
+                                Elements img = document.select("img.lazy-img");
+                                ImageModel imageDetailModel;
+                                for (Element element : img) {
+                                    imageDetailModel = new ImageModel();
+                                    String attr = element.attr("data-original");
+                                    imageDetailModel.url = attr.replace("219_300", "800_0");
+                                    list.add(imageDetailModel);
+                                }
+                                e.onNext(list);
+                                e.onComplete();
+                            }
+                        });
+
+        RxJsoupNetWork.getInstance().getApi(
+                getClass().getSimpleName(),
+                Observable.mergeArray(objectObservable1, objectObservable2)
+                , new DisposableObserver<List<ImageModel>>() {
+                    @Override
+                    public void onNext(@NonNull List<ImageModel> o) {
+                        KLog.i(o.size());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -68,6 +142,7 @@ public class MainActivity extends AppCompatActivity
                 KLog.i(RxBus.getInstance().unregister(BUS_TAG));
                 break;
             case R.id.btn_test_bus:
+//                mergeNetWork();
                 startActivity(A.class);
                 break;
             case R.id.btn_cancel_network:

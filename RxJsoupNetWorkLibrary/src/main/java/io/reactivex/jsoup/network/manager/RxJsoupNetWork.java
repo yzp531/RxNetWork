@@ -67,6 +67,38 @@ public class RxJsoupNetWork {
         return getApi(tag, url, POST, listener);
     }
 
+    public static Document getT(@NonNull String url) throws IOException {
+        return getT(GET, url);
+    }
+
+    public static Document getT(@Method int type, @NonNull String url) throws IOException {
+        switch (type) {
+            case POST:
+                return getInstance().postDocument(url);
+            case GET:
+                return getInstance().getDocument(url);
+        }
+        return getInstance().getDocument(url);
+    }
+
+    public <T> DisposableObserver<T> getApi(@NonNull Observable<T> observable, DisposableObserver<T> listener) {
+        return getApi(TAG, observable, listener);
+    }
+
+    public <T> DisposableObserver<T> getApi(@NonNull Object tag, @NonNull Observable<T> observable, DisposableObserver<T> listener) {
+        if (listener == null) {
+            throw new NullPointerException("listener is null");
+        }
+        DisposableObserver<T> disposableObserver =
+                observable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(listener);
+        arrayMap.put(tag, disposableObserver);
+        return disposableObserver;
+    }
+
+
     public <T> DisposableObserver<T> getApi(@NonNull Object tag,
                                             @NonNull final String url,
                                             @Method final int type,
