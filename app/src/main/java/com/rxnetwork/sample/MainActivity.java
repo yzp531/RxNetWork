@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.btn_start_network:
                 RxNetWork
                         .getInstance()
-                        .setBaseUrl(Api.ZL_BASE_API)
                         .setLogInterceptor(new SimpleLogInterceptor())
                         .getApi(getClass().getSimpleName(),
                                 RxNetWork.observable(Api.ZLService.class)

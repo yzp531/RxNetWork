@@ -35,6 +35,7 @@ public class RxNetWork {
     private Gson mGson = null;
     private String baseUrl = null;
     private OkHttpClient mOkHttpClient = null;
+    private Retrofit retrofit = null;
     private Converter.Factory mConverterFactory = null;
     private CallAdapter.Factory mAdapterFactory = null;
 
@@ -103,8 +104,13 @@ public class RxNetWork {
     public RxNetWork setConverterFactory(@NonNull Converter.Factory factory) {
         this.mConverterFactory = factory;
         return this;
-
     }
+
+    public RxNetWork setRetrofit(@NonNull Retrofit retrofit) {
+        this.retrofit = retrofit;
+        return this;
+    }
+
 
     public RxNetWork setAdapterFactory(@NonNull CallAdapter.Factory factory) {
         this.mAdapterFactory = factory;
@@ -169,6 +175,13 @@ public class RxNetWork {
         if (RxUtils.isEmpty(mAdapterFactory)) {
             rxNetWorkAdapterFactory();
         }
+        if (RxUtils.isEmpty(retrofit)) {
+            retrofit = initRetrofit();
+        }
+        return retrofit;
+    }
+
+    private Retrofit initRetrofit() {
         return new Retrofit.Builder()
                 .client(mOkHttpClient)
                 .baseUrl(baseUrl)
