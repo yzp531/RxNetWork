@@ -94,8 +94,6 @@ CallAdapter.Factory
                 .setCache()
                 .setCacheInterceptor();
 
-具体可参考：[https://github.com/7449/AndroidDevelop/blob/master/codeKK/src/main/java/framework/App.java](https://github.com/7449/AndroidDevelop/blob/master/codeKK/src/main/java/framework/App.java)
-
 
 > 配置Header:
 
