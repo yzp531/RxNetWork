@@ -1,4 +1,4 @@
-package io.reactivex.network.manager;
+package io.reactivex.network;
 
 
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.support.v4.util.ArrayMap;
 
 import com.google.gson.Gson;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -164,6 +165,11 @@ public class RxNetWork {
         }
     }
 
+    public void cancelAll() {
+        for (Map.Entry<Object, Disposable> disposableEntry : arrayMap.entrySet()) {
+            cancel(disposableEntry.getKey());
+        }
+    }
 
     private Retrofit getRetrofit() {
         if (RxUtils.isEmpty(mOkHttpClient)) {

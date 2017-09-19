@@ -17,10 +17,11 @@ import com.socks.library.KLog;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.network.RxNetWork;
+import io.reactivex.network.RxNetWorkListener;
 import io.reactivex.network.bus.RxBus;
 import io.reactivex.network.bus.SimpleRxBusCallBack;
-import io.reactivex.network.manager.RxNetWork;
-import io.reactivex.network.manager.RxNetWorkListener;
 
 
 public class MainActivity extends AppCompatActivity
@@ -79,12 +80,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(A.class);
                 break;
             case R.id.btn_start_network:
+                Observable<List<ListModel>> daily = RxNetWork.observable(Api.ZLService.class)
+                        .getList("daily", 20, 0);
                 RxNetWork
                         .getInstance()
                         .setLogInterceptor(new SimpleLogInterceptor())
-                        .getApi(getClass().getSimpleName(),
-                                RxNetWork.observable(Api.ZLService.class)
-                                        .getList("daily", 20, 0), this);
+                        .getApi(getClass().getSimpleName(), daily, this);
                 break;
             case R.id.btn_cancel_network:
                 RxNetWork.getInstance().cancel(getClass().getSimpleName());

@@ -7,9 +7,6 @@ import android.view.View;
 import com.rxnetwork.sample.R;
 
 import io.reactivex.network.bus.RxBus;
-import io.reactivex.network.manager.RxNetWork;
-
-import static android.R.attr.tag;
 
 /**
  * by y on 2017/5/22

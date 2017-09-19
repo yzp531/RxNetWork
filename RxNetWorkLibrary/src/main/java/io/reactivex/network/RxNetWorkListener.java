@@ -1,4 +1,4 @@
-package io.reactivex.network.manager;
+package io.reactivex.network;
 
 /**
  * by y on 2017/2/22.

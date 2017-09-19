@@ -10,6 +10,7 @@ import io.reactivex.subjects.Subject;
 class RxBusEvent {
     Subject<Object> subject;
     DisposableObserver disposable;
+
     RxBusEvent() {
     }
 }

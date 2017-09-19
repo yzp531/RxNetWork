@@ -5,7 +5,7 @@ import android.content.Context;
 
 import java.io.File;
 
-import io.reactivex.network.manager.RxNetWork;
+import io.reactivex.network.RxNetWork;
 import okhttp3.Cache;
 
 /**
