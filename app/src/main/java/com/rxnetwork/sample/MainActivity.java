@@ -7,10 +7,12 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
 import com.rxnetwork.sample.samplebus.A;
 import com.socks.library.KLog;
 
@@ -18,10 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import io.reactivex.network.RxNetWork;
 import io.reactivex.network.RxNetWorkListener;
 import io.reactivex.network.bus.RxBus;
 import io.reactivex.network.bus.SimpleRxBusCallBack;
+import io.reactivex.network.cache.RxCache;
+import io.reactivex.network.cache.result.CacheResult;
 
 
 public class MainActivity extends AppCompatActivity
@@ -80,8 +86,18 @@ public class MainActivity extends AppCompatActivity
                 startActivity(A.class);
                 break;
             case R.id.btn_start_network:
-                Observable<List<ListModel>> daily = RxNetWork.observable(Api.ZLService.class)
-                        .getList("daily", 20, 0);
+                Observable<List<ListModel>> daily = RxNetWork
+                        .observable(Api.ZLService.class)
+                        .getList("daily", 20, 0)
+                        .compose(RxCache.getInstance().transformerCN("zh", new TypeToken<List<ListModel>>() {
+                        }))
+                        .map(new Function<CacheResult<List<ListModel>>, List<ListModel>>() {
+                            @Override
+                            public List<ListModel> apply(@NonNull CacheResult<List<ListModel>> listCacheResult) throws Exception {
+                                Log.i("cache", listCacheResult.getType() + "");
+                                return listCacheResult.getResult();
+                            }
+                        });
                 RxNetWork
                         .getInstance()
                         .setLogInterceptor(new SimpleLogInterceptor())

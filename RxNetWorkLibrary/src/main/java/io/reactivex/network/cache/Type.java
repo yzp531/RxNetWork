@@ -5,5 +5,5 @@ package io.reactivex.network.cache;
  */
 
 public enum Type {
-    MEMORY_CACHE_NETWORK, MEMORY_NETWORK, CACHE_NETWORK
+    CACHE_NETWORK, NETWORK
 }
