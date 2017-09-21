@@ -16,31 +16,17 @@ import io.reactivex.network.cache.result.CacheResult;
 
 public class ApplyImpl implements Apply {
 
-
     @Override
-    public <T> Observable<CacheResult<T>> applyCacheNetWork(@NonNull final Object key,
-                                                            Observable<T> observable,
-                                                            final LruDisk lruDisk,
-                                                            TypeToken<T> typeToken,
-                                                            boolean network) {
-        if (network) {
-            return applyNetWork(key, observable, lruDisk, true);
-        }
+    public <T> Observable<CacheResult<T>> applyCacheNetWork(@NonNull final Object key, Observable<T> observable, final LruDisk lruDisk, TypeToken<T> typeToken, boolean network) {
         final T query = lruDisk.query(key, typeToken);
-        if (query == null) {
-            return applyNetWork(key, observable, lruDisk, true);
-        }
-//        return observable.map(new Function<T, CacheResult<T>>() {
-//            @Override
-//            public CacheResult<T> apply(@NonNull T t) throws Exception {
-//                return new CacheResult<>(query, key, CacheResult.CacheType.CACHE);
-//            }
-//        });
-        return Observable.just(new CacheResult<>(query, key, CacheResult.CacheType.CACHE));
+        return (query == null || network) ?
+                apply(key, observable, lruDisk, true)
+                :
+                Observable.just(new CacheResult<>(query, key, CacheResult.CacheType.CACHE));
     }
 
     @Override
-    public <T> Observable<CacheResult<T>> applyNetWork(@NonNull final Object key, Observable<T> observable, final LruDisk lruDisk, final boolean isInsert) {
+    public <T> Observable<CacheResult<T>> apply(@NonNull final Object key, Observable<T> observable, final LruDisk lruDisk, final boolean isInsert) {
         return observable.map(new Function<T, CacheResult<T>>() {
             @Override
             public CacheResult<T> apply(@NonNull T t) throws Exception {

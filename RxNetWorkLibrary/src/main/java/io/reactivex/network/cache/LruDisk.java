@@ -25,6 +25,7 @@ public class LruDisk {
     private DiskLruCache diskLruCache;
     private Gson gson;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     LruDisk(File path, int version, int valueCount, int maxSize) {
         if (!path.exists()) {
             path.mkdirs();
@@ -33,8 +34,8 @@ public class LruDisk {
         diskLruCache = DiskLruCache.create(FileSystem.SYSTEM, path, version, valueCount, maxSize);
     }
 
-    @NonNull
     public <T> boolean insert(@NonNull Object key, T value) {
+        delete(key);
         DiskLruCache.Editor editor = null;
         try {
             editor = diskLruCache.edit(String.valueOf(key));
@@ -54,10 +55,6 @@ public class LruDisk {
         return false;
     }
 
-    public <T> T update(@NonNull Object key, T value) {
-        return null;
-    }
-
     public <T> T query(@NonNull Object key, TypeToken<T> typeToken) {
         DiskLruCache.Snapshot snapshot = null;
         try {
@@ -75,7 +72,7 @@ public class LruDisk {
         return null;
     }
 
-    public boolean delete(@NonNull Object key) {
+    boolean delete(@NonNull Object key) {
         try {
             return diskLruCache.remove(String.valueOf(key));
         } catch (IOException e) {
@@ -84,7 +81,7 @@ public class LruDisk {
         return false;
     }
 
-    public void deleteAll() {
+    void deleteAll() {
         try {
             diskLruCache.delete();
         } catch (IOException e) {
@@ -92,7 +89,7 @@ public class LruDisk {
         }
     }
 
-    public boolean containsKey(@NonNull Object key) {
+    boolean containsKey(@NonNull Object key) {
         try {
             return diskLruCache.get(String.valueOf(key)) == null;
         } catch (IOException e) {
@@ -101,10 +98,21 @@ public class LruDisk {
         return false;
     }
 
-    public boolean onDestroy() {
+    long getCacheSize() {
+        try {
+            return diskLruCache.size();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    boolean onDestroy() {
         if (diskLruCache != null) {
             try {
-                diskLruCache.close();
+                if (!diskLruCache.isClosed()) {
+                    diskLruCache.close();
+                }
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

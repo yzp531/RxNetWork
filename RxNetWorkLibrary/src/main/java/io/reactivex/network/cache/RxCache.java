@@ -76,6 +76,7 @@ public class RxCache {
         return transformer("", Type.NETWORK, null, false);
     }
 
+
     private <T> ObservableTransformer<T, CacheResult<T>> transformer(@NonNull final Object key, final Type type, final TypeToken<T> typeToken, final boolean network) {
         return new ObservableTransformer<T, CacheResult<T>>() {
             @Override
@@ -84,7 +85,7 @@ public class RxCache {
                     case CACHE_NETWORK:
                         return apply.applyCacheNetWork(key, upstream, lruDisk, typeToken, network);
                     case NETWORK:
-                        return apply.applyNetWork(key, upstream, lruDisk, false);
+                        return apply.apply(key, upstream, lruDisk, false);
                 }
                 return null;
             }
@@ -102,5 +103,21 @@ public class RxCache {
 
     public boolean onDestroy() {
         return lruDisk != null && lruDisk.onDestroy();
+    }
+
+    public long getCacheSize() {
+        return lruDisk.getCacheSize();
+    }
+
+    public boolean delete(@NonNull Object key) {
+        return lruDisk.delete(key);
+    }
+
+    public void deleteAll() {
+        lruDisk.deleteAll();
+    }
+
+    public boolean containsKey(@NonNull Object key) {
+        return lruDisk.containsKey(key);
     }
 }

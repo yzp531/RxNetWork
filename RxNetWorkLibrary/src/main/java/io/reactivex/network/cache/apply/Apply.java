@@ -14,5 +14,6 @@ import io.reactivex.network.cache.result.CacheResult;
 public interface Apply {
     <T> Observable<CacheResult<T>> applyCacheNetWork(@NonNull Object key, Observable<T> observable, LruDisk lruDisk, TypeToken<T> typeToken, boolean network);
 
-    <T> Observable<CacheResult<T>> applyNetWork(@NonNull Object key, Observable<T> observable, LruDisk lruDisk, boolean isInsert);
+    <T> Observable<CacheResult<T>> apply(@NonNull Object key, Observable<T> observable, LruDisk lruDisk, boolean isInsert);
+
 }
