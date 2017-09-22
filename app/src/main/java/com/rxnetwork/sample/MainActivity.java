@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
 import com.rxnetwork.sample.samplebus.A;
 import com.socks.library.KLog;
 
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity
                 Observable<List<ListModel>> daily = RxNetWork
                         .observable(Api.ZLService.class)
                         .getList("daily", 20, 0)
-                        .compose(RxCache.getInstance().<List<ListModel>>transformerN())
+                        .compose(RxCache.getInstance().transformerCN("", true, new TypeToken<List<ListModel>>() {
+                        }))
                         .map(new Function<CacheResult<List<ListModel>>, List<ListModel>>() {
                             @Override
                             public List<ListModel> apply(@NonNull CacheResult<List<ListModel>> listCacheResult) throws Exception {

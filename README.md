@@ -93,6 +93,26 @@ CallAdapter.Factory
                 .getInstance()
                 .setCache()
                 .setCacheInterceptor();
+                
+> RxCache
+
+`okhttp`不支持post缓存，所以新增`RxCache`对缓存的支持
+
+* 只走网络 
+
+
+    Observable
+              .compose(RxCache.getInstance().<T>transformerN())
+              
+              
+* 走缓存
+
+true ： 有网的情况下 网络优先，否则 缓存优先
+
+    Observable
+              .compose(RxCache.getInstance().transformerCN("", true, new TypeToken<List<ListModel>>() {
+                                      }))
+
 
 
 > 配置Header:
