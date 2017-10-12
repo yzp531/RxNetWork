@@ -4,8 +4,10 @@ package io.reactivex.network.cache.apply.impl;
 import com.google.gson.reflect.TypeToken;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import io.reactivex.network.cache.CustomizeTransformerCall;
 import io.reactivex.network.cache.LruDisk;
 import io.reactivex.network.cache.apply.Apply;
 import io.reactivex.network.cache.result.CacheResult;
@@ -37,5 +39,10 @@ public class ApplyImpl implements Apply {
                 return tCacheResult;
             }
         });
+    }
+
+    @Override
+    public <T> ObservableSource<CacheResult<T>> applyCustomize(@NonNull Object key, Observable<T> upstream, CustomizeTransformerCall customizeTransformerCall) {
+        return customizeTransformerCall.applyCustomize(key, upstream);
     }
 }

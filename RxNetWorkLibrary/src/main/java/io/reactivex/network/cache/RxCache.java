@@ -76,6 +76,16 @@ public class RxCache {
         return transformer("", Type.NETWORK, null, false);
     }
 
+    public <T> ObservableTransformer<T, CacheResult<T>> customizeTransformer(@NonNull final Object key,
+                                                                             final CustomizeTransformerCall customizeTransformerCall) {
+        return new ObservableTransformer<T, CacheResult<T>>() {
+            @Override
+            public ObservableSource<CacheResult<T>> apply(@NonNull Observable<T> upstream) {
+                return apply.applyCustomize(key, upstream, customizeTransformerCall);
+            }
+        };
+    }
+
 
     private <T> ObservableTransformer<T, CacheResult<T>> transformer(@NonNull final Object key, final Type type, final TypeToken<T> typeToken, final boolean network) {
         return new ObservableTransformer<T, CacheResult<T>>() {

@@ -71,6 +71,15 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.btn_cancel_network).setOnClickListener(this);
 
 
+//        Observable<CacheResult<Object>> daily = RxNetWork
+//                .observable(Api.ZLService.class)
+//                .getList("daily", 20, 0)
+//                .compose(RxCache.getInstance().customizeTransformer("", new CustomizeTransformerCall() {
+//                    @Override
+//                    public <T> ObservableSource<CacheResult<T>> applyCustomize(@NonNull Object key, Observable<T> upstream) {
+//                        return Observable.just(null);
+//                    }
+//                }));
     }
 
     @Override
