@@ -9,7 +9,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.network.util.RxUtils
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
@@ -35,8 +34,6 @@ class RxNetWork private constructor() {
 
     private var mLogInterceptor: Interceptor? = null
     private var mHeaderInterceptor: Interceptor? = null
-    private var mCacheInterceptor: Interceptor? = null
-    private var mCache: Cache? = null
 
     private object RxNetWorkHolder {
         val rxNetWork = RxNetWork()
@@ -69,16 +66,6 @@ class RxNetWork private constructor() {
 
     fun setHeaderInterceptor(mHeaderInterceptor: Interceptor): RxNetWork {
         this.mHeaderInterceptor = mHeaderInterceptor
-        return this
-    }
-
-    fun setCacheInterceptor(mCacheInterceptor: Interceptor): RxNetWork {
-        this.mCacheInterceptor = mCacheInterceptor
-        return this
-    }
-
-    fun setCache(mCache: Cache): RxNetWork {
-        this.mCache = mCache
         return this
     }
 
@@ -178,11 +165,6 @@ class RxNetWork private constructor() {
             builder.addInterceptor(mLogInterceptor!!)
         if (!RxUtils.isEmpty(mHeaderInterceptor))
             builder.addInterceptor(mHeaderInterceptor!!)
-        if (!RxUtils.isEmpty(mCacheInterceptor) && !RxUtils.isEmpty(mCache)) {
-            builder.cache(mCache)
-            builder.addNetworkInterceptor(mCacheInterceptor!!)
-            builder.addInterceptor(mCacheInterceptor!!)
-        }
         builder.connectTimeout(timeout_time.toLong(), TimeUnit.SECONDS)
                 .writeTimeout(timeout_time.toLong(), TimeUnit.SECONDS)
                 .readTimeout(timeout_time.toLong(), TimeUnit.SECONDS)

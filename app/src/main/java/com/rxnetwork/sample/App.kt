@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.Context
 import io.reactivex.network.RxNetWork
 import io.reactivex.network.cache.RxCache
-import okhttp3.Cache
-import java.io.File
 
 /**
  * by y on 2017/2/27
@@ -22,8 +20,6 @@ class App : Application() {
         RxNetWork
                 .instance
                 .setBaseUrl(Api.ZL_BASE_API)
-                .setCache(Cache(File(cacheDir, "SimpleCache"), (1024 * 1024 * 100).toLong()))
-                .setCacheInterceptor(SimpleCache.SimpleCacheInterceptor())
 
         RxCache
                 .instance

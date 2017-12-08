@@ -61,6 +61,35 @@ class RxBus private constructor() {
     }
 
     /**
+     * 接受消息
+     *
+     * @param tag      标志
+     * @param callBack 回调
+     */
+    fun <T> register(tag: String, callBack: RxBusCallBack<T>): DisposableObserver<*>? {
+        var rxBusEvent = rxBusEventArrayMap[tag]
+        if (RxUtils.isEmpty(rxBusEvent)) {
+            rxBusEvent = RxBusEvent()
+            rxBusEvent.subject = PublishSubject.create<Any>().toSerialized()
+            rxBusEvent.disposable = rxBusEvent.subject!!
+                    .ofType(callBack.busOfType())
+                    .subscribeWith(object : RxBusObserver<T>() {
+                        override fun onError(@io.reactivex.annotations.NonNull e: Throwable) {
+                            super.onError(e)
+                            callBack.onBusError(e)
+                        }
+
+                        override fun onNext(@io.reactivex.annotations.NonNull t: T) {
+                            super.onNext(t)
+                            callBack.onBusNext(t)
+                        }
+                    })
+            rxBusEventArrayMap.put(tag, rxBusEvent)
+        }
+        return rxBusEvent!!.disposable
+    }
+
+    /**
      * 取消订阅
      *
      * @param tag 标志
@@ -72,7 +101,7 @@ class RxBus private constructor() {
             return true
         }
         val subject = rxBusEvent!!.subject
-        val disposable = rxBusEvent!!.disposable
+        val disposable = rxBusEvent.disposable
         if (!disposable!!.isDisposed) {
             disposable.dispose()
         }
