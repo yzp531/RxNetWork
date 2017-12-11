@@ -18,6 +18,7 @@ import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -31,7 +32,7 @@ import io.reactivex.network.cache.result.CacheResult;
 
 
 public class MainActivity extends AppCompatActivity
-        implements RxNetWorkListener<List<ListModel>>, View.OnClickListener {
+        implements RxNetWorkListener<RxNetWorkTask<List<ListModel>>>, View.OnClickListener {
 
     private static final String BUS_TAG = "bus_tag";
 
@@ -95,16 +96,20 @@ public class MainActivity extends AppCompatActivity
                 startActivity(A.class);
                 break;
             case R.id.btn_start_network:
-                Observable<List<ListModel>> daily = RxNetWork
+                Observable<RxNetWorkTask<List<ListModel>>> daily = RxNetWork
                         .observable(Api.ZLService.class)
                         .getList("daily", 20, 0)
                         .compose(RxCache.getInstance().transformerCN("1", true, new TypeToken<List<ListModel>>() {
                         }))
-                        .map(new Function<CacheResult<List<ListModel>>, List<ListModel>>() {
+                        .map(new Function<CacheResult<List<ListModel>>, RxNetWorkTask<List<ListModel>>>() {
                             @Override
-                            public List<ListModel> apply(@NonNull CacheResult<List<ListModel>> listCacheResult) throws Exception {
+                            public RxNetWorkTask<List<ListModel>> apply(@NonNull CacheResult<List<ListModel>> listCacheResult) throws Exception {
                                 Log.i("RxCache", listCacheResult.getType() + "");
-                                return listCacheResult.getResult();
+
+                                RxNetWorkTask<List<ListModel>> task = new RxNetWorkTask<>();
+                                task.data = listCacheResult.getResult();
+                                task.tag = new Random().nextInt();
+                                return task;
                             }
                         });
                 RxNetWork
@@ -143,8 +148,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNetWorkSuccess(List<ListModel> data) {
-        adapter.addAll(data);
+    public void onNetWorkSuccess(RxNetWorkTask<List<ListModel>> data) {
+        Toast.makeText(getApplicationContext(), String.valueOf(data.tag), Toast.LENGTH_SHORT).show();
+        adapter.addAll(data.data);
     }
 
     @Override
