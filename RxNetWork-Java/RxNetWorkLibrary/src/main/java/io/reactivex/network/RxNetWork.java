@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.network.util.RxUtils;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -114,6 +115,41 @@ public class RxNetWork {
         return getApi(TAG, mObservable, listener);
     }
 
+    public <M> Disposable getApiTask(@NonNull Object tag, @NonNull Observable<M> observable, final RxNetWorkTaskListener<RxNetWorkTask<M>> listener) {
+        if (listener == null) {
+            throw new NullPointerException("listener is null");
+        }
+        listener.onNetWorkStart();
+        Disposable disposable =
+                observable
+                        .map(new Function<M, RxNetWorkTask<M>>() {
+                            @Override
+                            public RxNetWorkTask<M> apply(M m) throws Exception {
+                                return new RxNetWorkTask<>(m, listener.getTag());
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableObserver<RxNetWorkTask<M>>() {
+
+                            @Override
+                            public void onNext(RxNetWorkTask<M> mRxNetWorkTask) {
+                                listener.onNetWorkSuccess(mRxNetWorkTask);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                listener.onNetWorkError(e);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                listener.onNetWorkComplete();
+                            }
+                        });
+        arrayMap.put(tag, disposable);
+        return disposable;
+    }
 
     public <M> Disposable getApi(@NonNull Object tag, @NonNull Observable<M> observable, final RxNetWorkListener<M> listener) {
         if (listener == null) {

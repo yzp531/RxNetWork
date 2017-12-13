@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,10 +20,10 @@ import java.util.List;
 import java.util.Random;
 
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.network.RxNetWork;
-import io.reactivex.network.RxNetWorkListener;
+import io.reactivex.network.RxNetWorkTask;
+import io.reactivex.network.RxNetWorkTaskListener;
 import io.reactivex.network.bus.RxBus;
 import io.reactivex.network.bus.SimpleRxBusCallBack;
 import io.reactivex.network.cache.RxCache;
@@ -32,7 +31,7 @@ import io.reactivex.network.cache.result.CacheResult;
 
 
 public class MainActivity extends AppCompatActivity
-        implements RxNetWorkListener<RxNetWorkTask<List<ListModel>>>, View.OnClickListener {
+        implements RxNetWorkTaskListener<RxNetWorkTask<List<ListModel>>>, View.OnClickListener {
 
     private static final String BUS_TAG = "bus_tag";
 
@@ -96,26 +95,21 @@ public class MainActivity extends AppCompatActivity
                 startActivity(A.class);
                 break;
             case R.id.btn_start_network:
-                Observable<RxNetWorkTask<List<ListModel>>> daily = RxNetWork
+                Observable<List<ListModel>> daily = RxNetWork
                         .observable(Api.ZLService.class)
                         .getList("daily", 20, 0)
                         .compose(RxCache.getInstance().transformerCN("1", true, new TypeToken<List<ListModel>>() {
                         }))
-                        .map(new Function<CacheResult<List<ListModel>>, RxNetWorkTask<List<ListModel>>>() {
+                        .map(new Function<CacheResult<List<ListModel>>, List<ListModel>>() {
                             @Override
-                            public RxNetWorkTask<List<ListModel>> apply(@NonNull CacheResult<List<ListModel>> listCacheResult) throws Exception {
-                                Log.i("RxCache", listCacheResult.getType() + "");
-
-                                RxNetWorkTask<List<ListModel>> task = new RxNetWorkTask<>();
-                                task.data = listCacheResult.getResult();
-                                task.tag = new Random().nextInt();
-                                return task;
+                            public List<ListModel> apply(CacheResult<List<ListModel>> listCacheResult) throws Exception {
+                                return listCacheResult.getResult();
                             }
                         });
                 RxNetWork
                         .getInstance()
                         .setLogInterceptor(new SimpleLogInterceptor())
-                        .getApi(getClass().getSimpleName(), daily, this);
+                        .getApiTask(getClass().getSimpleName(), daily, this);
                 break;
             case R.id.btn_cancel_network:
                 RxNetWork.getInstance().cancel(getClass().getSimpleName());
@@ -147,15 +141,21 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
     }
 
+
     @Override
     public void onNetWorkSuccess(RxNetWorkTask<List<ListModel>> data) {
-        Toast.makeText(getApplicationContext(), String.valueOf(data.tag), Toast.LENGTH_SHORT).show();
-        adapter.addAll(data.data);
+        Toast.makeText(getApplicationContext(), String.valueOf(data.getTag()), Toast.LENGTH_SHORT).show();
+        adapter.addAll(data.getData());
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         KLog.i(RxBus.getInstance().unregisterAll());
+    }
+
+    @Override
+    public Object getTag() {
+        return new Random().nextInt();
     }
 }
