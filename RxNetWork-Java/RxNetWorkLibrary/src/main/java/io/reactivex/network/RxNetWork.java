@@ -3,6 +3,7 @@ package io.reactivex.network;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.google.gson.Gson;
 
@@ -16,7 +17,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.network.util.RxUtils;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
@@ -193,6 +193,10 @@ public class RxNetWork {
         for (Map.Entry<Object, Disposable> disposableEntry : arrayMap.entrySet()) {
             cancel(disposableEntry.getKey());
         }
+    }
+
+    public SimpleArrayMap<Object, Disposable> getMap() {
+        return arrayMap;
     }
 
     private Retrofit getRetrofit() {
