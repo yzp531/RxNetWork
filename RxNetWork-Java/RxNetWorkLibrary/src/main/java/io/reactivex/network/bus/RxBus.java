@@ -105,7 +105,6 @@ public class RxBus {
                                 @Override
                                 public void onNext(@io.reactivex.annotations.NonNull T t) {
                                     super.onNext(t);
-                                    callBack.onBusNext(t);
                                 }
                             });
             rxBusEventArrayMap.put(tag, rxBusEvent);

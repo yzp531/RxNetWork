@@ -17,6 +17,12 @@ class Api {
     interface ZLService {
         @GET("columns/" + "{suffix}/posts")
         Observable<List<ListModel>> getList(@Path("suffix") String suffix, @Query("limit") int limit, @Query("offset") int offset);
+
+        @GET("columns/" + "{suffix}/posts")
+        Observable<String> getString(@Path("suffix") String suffix, @Query("limit") int limit, @Query("offset") int offset);
+
+        @GET("columns/" + "{suffix}/psts")
+        Observable<Object> getObject(@Path("suffix") String suffix, @Query("limit") int limit, @Query("offset") int offset);
     }
 
 }

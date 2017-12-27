@@ -11,7 +11,7 @@ android 网络请求简化库
 
 [https://github.com/7449/JsoupSample](https://github.com/7449/JsoupSample)
 
-> compile 'com.ydevelop:rxNetWork:0.1.7'
+> compile 'com.ydevelop:rxNetWork:0.1.8'
 
 
 > 建议初始化:
@@ -86,13 +86,6 @@ CallAdapter.Factory
 
 
 > 缓存：
-
-如果使用默认的`okhttp`,缓存需要如下配置
-
-        RxNetWork
-                .getInstance()
-                .setCache()
-                .setCacheInterceptor();
                 
 > RxCache
 
@@ -111,7 +104,7 @@ true ： 有网的情况下 网络优先，否则 缓存优先
 
     Observable
               .compose(RxCache.getInstance().transformerCN("", true, new TypeToken<List<ListModel>>() {
-                                      }))
+                                     }))
 
 
 

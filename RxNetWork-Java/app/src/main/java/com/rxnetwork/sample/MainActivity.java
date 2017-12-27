@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.btn_test_bus).setOnClickListener(this);
         findViewById(R.id.btn_start_network).setOnClickListener(this);
         findViewById(R.id.btn_cancel_network).setOnClickListener(this);
+        findViewById(R.id.btn_test_rxjava).setOnClickListener(this);
 
 
 //        Observable<CacheResult<Object>> daily = RxNetWork
@@ -113,6 +114,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.btn_cancel_network:
                 RxNetWork.getInstance().cancel(getClass().getSimpleName());
+                break;
+            case R.id.btn_test_rxjava:
+                startActivity(RxJavaMergeActivity.class);
                 break;
         }
         textView.setText("");

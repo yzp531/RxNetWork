@@ -135,6 +135,7 @@ public class RxNetWork {
                             @Override
                             public void onNext(RxNetWorkTask<M> mRxNetWorkTask) {
                                 listener.onNetWorkSuccess(mRxNetWorkTask);
+
                             }
 
                             @Override
